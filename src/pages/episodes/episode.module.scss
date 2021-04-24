@@ -25,14 +25,14 @@
         left: 0;
         top: 50%;
         background: var(--purple-500);
-        transform: translate(-50% -50%);
+        transform: translate(-50%, -50%);
       }
 
       &:last-child {
-        left: 0;
+        right: 0;
         top: 50%;
         background: var(--green-500);
-        transform: translate(50% -50%);
+        transform: translate(50%, -50%);
       }
 
       &:hover {
