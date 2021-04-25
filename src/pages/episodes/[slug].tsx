@@ -2,9 +2,10 @@ import { format, parseISO } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 import Image from 'next/image'
 import Link from 'next/link'
-import { GetStaticPaths, GetStaticProps } from 'next'
+import next, { GetStaticPaths, GetStaticProps } from 'next'
 import { api } from '../../services/api'
 import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString'
+import { useRouter } from "next/router";
 
 import styles from './episode.module.scss'
 
@@ -61,10 +62,29 @@ export default function Episode({ episode }: EpisodeProps) {
   )
 }
 
+// client(browser) - next.js(node.js) - server(back - end)
+//fallbacks:  true => roda no client ;  'blocking' (melhor opção do SEO)=> roda na camada do next.js
+//fallbacks => incremental static regeneration
 export const getStaticPaths: GetStaticPaths = async () => {
+  const { data } = await api.get('episodes', {
+    params: {
+      _limit: 2,
+      _sort: 'publised_at',
+      _order: 'desc'
+    }
+  })
+
+  const paths = data.map(episode => {
+    return {
+      params: {
+        slug: episode.id
+      }
+    }
+  })
+
   return {
     paths: [],
-    fallback: 'blocking'
+    fallback: 'blocking'  //fallbacks => incremental static regeneration
   }
 }
 
